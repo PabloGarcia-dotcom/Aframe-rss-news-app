@@ -1,0 +1,536 @@
+
+<!doctype html>
+<html>
+ 
+  <head>
+ <meta charset="UTF-8">
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+	<script src="https://cdn.rawgit.com/mrturck/aframe-joystick/master/joystick.min.js"></script>
+   <script src="build.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+    body{
+      font-family: 'Roboto', sans-serif;
+      text-shadow: 0px 0px 10px #00d2ff;
+      color: #fff;
+      font-size: 32px;
+    }
+    h1{
+      font-size: 52px;
+    }
+    .dark{
+      background-color: rgba(0,0,0,0.2);
+      border-radius:50px;  
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      padding: 40px;
+    }
+    .main{
+      width: 1024px;
+      height: 768px;
+      overflow: hidden;
+    }
+    .menu{
+      width: 256px;
+      height: 768px;
+      text-align: center;
+    }
+    .menu ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    a.button{
+      display: inline-block;
+      width: 100%;
+      border-radius: 20px;
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      padding: 10px 0;
+      margin-bottom: 20px;
+    }
+    a.button:hover{
+      background-color: #fff;
+      color: #888;
+    }
+    a.button:active{
+      background-color: #fff;
+      color: #888;
+      box-shadow: 0px 0px 50px #00d2ff;
+    }
+    a.imgLink{
+      width: 100%;
+      border-radius: 20px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      padding: 10px 0;
+      margin-bottom: 20px;
+      background-color: #444;
+      border: 3px solid #444;
+      text-shadow: none;
+      display: block;
+    }
+    a.imgLink:hover{
+      border: 3px solid #fff;
+      background-color: #444;
+    }
+    .code{
+      white-space: pre;
+      font-size: 0.7em;
+      background-color: #000;
+      margin-bottom: 30px;
+    }
+    .next,.prev{
+      position: absolute;
+      bottom: 0px;
+      right: 30px;
+      display: inline-block;
+      width: auto !important;
+      padding: 20px 30px !important;
+    }
+    .prev{
+      right: auto;
+      left: 30px;
+    }
+    #page1{
+      position: relative;
+      height: 100%;
+    }
+    #page2, #page3, #page4{
+      display: none;
+      position: relative;
+      height: 100%;
+    }
+    .slide{
+      height:100%;
+    }
+    .slide:target #page1{
+      display: none;
+    }
+    #slide2:target #page2{
+      display: block;
+    }
+    #slide3:target #page3{
+      display: block;
+    }
+    #slide4:target #page4{
+      display: block;
+    }
+    #page4 ul{
+      list-style-type: square;
+      font-size: 0.8em;
+    }
+    </style>
+    <script>
+    AFRAME.registerComponent('showbutton', {
+      schema: {
+        'target': {type: 'selector'},
+      },
+      init: function () {
+        var show=false;    
+        this.el.addEventListener("click",()=>{
+          if(show){
+            this.data.target.setAttribute("visible","false");
+            this.el.querySelector("a").innerHTML="Show Box";
+          }else{
+            this.data.target.setAttribute("visible","true");
+            this.el.querySelector("a").innerHTML="Hide Box";
+          }
+          show=!show;
+        });
+      }
+    });
+    </script>
+  </head>
+  <body>
+    <div id="slide2" class="slide">
+    <div id="slide3" class="slide">
+    <div id="slide4" class="slide">
+    <a-scene 	keyboard-shortcuts="enterVR: false;" 
+	vr-mode-ui="enabled: false;"
+	joystick
+	fog="type: linear; color: #222222; far: 20;">
+      <a-assets>
+        <img id="floor" src="assets/floor.png">
+        <img id="tex1" src="assets/box.png">
+      </a-assets>
+	
+	<!-- adding in look controls; automatically sets turnEnabled/lookEnabled to false  -->
+	
+	<!-- adding in look controls; automatically sets turnEnabled/lookEnabled to false  -->
+
+	
+      <!-- Basics -->
+      <a-mixin id="ring" geometry="primitive:ring; radius-inner:0.00001; radius-outer:0.5; theta-start:0; theta-length:360; segments-theta:60;" material="color:#fff;" position="0 0 0"></a-mixin>
+      <!---->
+      <a-mixin id="panelLoader" geometry="primitive:ring; radius-inner:0.20; radius-outer:0.22; theta-start:0; segments-theta:60; theta-length:360" material="color:#fff;" position="0 0 0.001"></a-mixin>
+      <!-- end Basics -->
+      <!-- Button Mixins -->
+      <a-mixin id="profileTab" geometry="primitive:ring; radius-inner:0.23; radius-outer:0.415; theta-length:33.75;" material="color:#EDFFFB; opacity:0;" position="0 0 0.001"></a-mixin>
+      <!---->
+      <a-mixin id="panelMain" geometry="primitive:ring; radius-inner:0.23; radius-outer:0.5; theta-length:45;" position="0 0 0"></a-mixin>
+      <!---->
+      <a-mixin id="panelButton" geometry="primitive:ring; radius-inner:0.23; radius-outer:0.49; theta-length:45;" material="color:#2E96A0; opacity:1;" position="0 0 0"></a-mixin>
+      <!---->
+      <a-mixin id="settingsButton" geometry="primitive:ring; radius-inner:0.00001; radius-outer:0.049; theta-length:360" material="color:#2E96A0; opacity:0;" position="0 0 0"></a-mixin>
+      <!-- end Button Mixins -->
+      <!-- Icon Sizes -->
+      <a-mixin id="iconSmall" geometry="primitive:plane; height:0.12;width:0.12" material="transparent:true"></a-mixin>
+      <a-mixin id="iconLarge" geometry="primitive:plane; height:0.16;width:0.16" material="transparent:true"></a-mixin>
+      <!-- end Icon Sizes -->
+      <!-- PNG Resources -->
+      <a-mixin id="default" material="src:url(i/profile1_on.png)"></a-mixin>
+      <a-mixin id="airplane" material="src:url(i/profile2.png)"></a-mixin>
+      <a-mixin id="bed" material="src:url(i/profile3.png)"></a-mixin>
+      <a-mixin id="special" material="src:url(i/profile4.png)"></a-mixin>
+      <!---->
+      <a-mixin id="cancel" material="src:url(i/icn_cancel.png)"></a-mixin>
+      <a-mixin id="apply" material="src:url(i/icn_apply.png)"></a-mixin>
+      <!---->
+      <a-mixin id="settings" material="src:url(i/icn_settings.png)"></a-mixin>
+      <a-mixin id="info" material="src:url(i/icn_info.png)"></a-mixin>
+      <a-mixin id="voice" material="src:url(i/icn_voice.png)"></a-mixin>
+	  
+    </a-assets>
+
+
+ 
+
+
+  
+
+
+
+      
+	
+			
+    <a-entity id="usrBounds" position="0 1.6 2" visible="false">
+      <a-entity id="grid" geometry="primitive: cylinder; height: 3; openEnded: true; radius: 2; segmentsHeight: 20; segmentsRadial: 80" material="opacity: 0.2; shader: flat; side: double; transparent: true; color: #6441A5; wireframe: true">
+      </a-entity>
+      <a-entity id="uispace" geometry="primitive: cylinder; height: 1.8; openEnded: true; radius: 2; segmentsHeight: 10; segmentsRadial: 40; thetaLength: 72; thetaStart: 144" material="opacity: 0.2; shader: flat; side: double; transparent: true; color: #452360">
+      </a-entity>        
+    </a-entity>
+
+
+
+    <!-- deco -->
+    
+
+    <a-entity id="chair" position="-1.5 0 -3">
+      <a-box width="0.05" height="0.46" depth="0.05" position="-0.21 0.23 0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="0.21 0.23 -0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="0.21 0.23 0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="-0.21 0.23 -0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.48" height="0.07" depth="0.52" position="0 0.49 0" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.48" height="0.51" depth="0.07" position="0 0.78 -0.225" color="#333" material="" geometry=""></a-box>
+    </a-entity>
+    <a-entity id="chair2" position="-2.5 0 -2.2" rotation="0 90 0">
+      <a-box width="0.05" height="0.46" depth="0.05" position="-0.21 0.23 0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="0.21 0.23 -0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="0.21 0.23 0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.46" depth="0.05" position="-0.21 0.23 -0.23" color="#555" material="" geometry=""></a-box>
+      <a-box width="0.48" height="0.07" depth="0.52" position="0 0.49 0" color="#333" material="" geometry=""></a-box>
+
+      <a-box width="0.48" height="0.51" depth="0.07" position="0 0.78 -0.225" color="#333" material="" geometry=""></a-box>
+    </a-entity>
+    <a-entity id="table" position="-1.5 0 -2.2">
+      <a-box width="0.05" height="0.75" depth="0.05" position="-0.5 0.375 0.35" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.75" depth="0.05" position="0.5 0.375 -0.35" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.75" depth="0.05" position="0.5 0.375 0.35" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.05" height="0.75" depth="0.05" position="-0.5 0.375 -0.35" color="#333" material="" geometry=""></a-box>
+      <a-box width="1.2" height="0.07" depth="0.9" position="0 0.79 0" color="#999" material="" geometry=""></a-box>
+    </a-entity>
+    <a-entity id="lamp" position="-3.5 0 -3.5">
+      <a-cylinder height="0.02" radius="0.26" color="#333" position="0 0.02 0" material="" geometry=""></a-cylinder>
+      <a-cylinder height="1.955" radius="0.02" color="#333" position="0 0.9775 0" material="" geometry=""></a-cylinder>
+      <a-cylinder height="0.66" radius="0.35" color="#f5f5f5" position="0 1.62 0" material="" geometry=""></a-cylinder>
+    </a-entity>
+    <a-entity id="frame" position="">
+
+    </a-entity>
+    <a-entity id="bedframe" position="2.47 0 -2.7">
+      <a-box width="0.1" height="0.1" depth="0.1" position="-0.84 0.05 -1.17" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.1" height="0.1" depth="0.1" position="0.84 0.05 -1.17" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.1" height="0.1" depth="0.1" position="0.84 0.05 1.17" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.1" height="0.1" depth="0.1" position="-0.84 0.05 1.17" color="#333" material="" geometry=""></a-box>
+      <a-box width="1.78" height="1.32" depth="0.08" position="0 0.76 -1.18" color="#999" material="" geometry=""></a-box>
+      <a-box width="1.78" height="0.72" depth="0.08" position="0 0.46 1.19" color="#999" material="" geometry=""></a-box>
+      <a-box width="1.78" height="0.32" depth="2.3" position="0 0.26 0" color="#999" material="" geometry=""></a-box>
+      <a-box width="1.72" height="0.25" depth="2.3" position="0 0.54 0" color="#ccc" material="" geometry=""></a-box>  
+    </a-entity>
+    <a-entity id="fireplace" position="0 0 6.13" rotation="0 180 0">
+      <a-box width="1.24" height="0.07" depth="0.38" position="0 0.0375 0.3" color="#777" material="" geometry=""></a-box>
+      <a-box width="1.2" height="0.22" depth="0.15" position="0 1.03 0.19" color="#aaa" material="" geometry=""></a-box>
+      <a-box width="0.22" height="0.85" depth="0.15" position="-0.49 0.495 0.19" color="#f9f9f9" material="" geometry=""></a-box>
+      <a-box width="0.22" height="0.85" depth="0.15" position="0.49 0.495 0.19" color="#f9f9f9" material="" geometry=""></a-box>
+      <a-box width="0.76" height="0.3" depth="0.13" position="0 0.77 0.18" color="#fff" material="" geometry=""></a-box>
+      <a-box width="0.175" height="0.55" depth="0.13" position="-0.3 0.345 0.18" color="#f0f0f0" material="" geometry=""></a-box>
+      <a-box width="0.175" height="0.55" depth="0.13" position="0.3 0.345 0.18" color="#f0f0f0" material="" geometry=""></a-box>
+    </a-entity>
+    <a-entity id="sofacouch" position="2 0 3.5" rotation="0 -29.999999999999996 0">
+      <a-box width="2.337" height="0.178" depth="0.657" position="0 0.089 0" color="#666" material="" geometry=""></a-box>
+      <a-box width="2.438" height="0.051" depth="0.914" position="0 0.2 0" color="#333" material="" geometry=""></a-box>
+      <a-box width="2.438" height="0.457" depth="0.051" position="0 0.45 -0.43" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.051" height="0.457" depth="0.914" position="-1.19 0.45 0" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.051" height="0.457" depth="0.914" position="1.19 0.45 0" color="#333" material="" geometry=""></a-box>
+      <a-box width="0.14" height="0.465" depth="0.863" position="-1.09 0.46 0.03" color="#eee" material="" geometry=""></a-box>
+      <a-box width="0.14" height="0.465" depth="0.863" position="1.09 0.46 0.03" color="#eee" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.5" depth="0.14" position="-0.68 0.46 -0.33" color="#ddd" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.5" depth="0.14" position="0 0.46 -0.33" color="#ddd" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.5" depth="0.14" position="0.68 0.46 -0.33" color="#ddd" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.14" depth="0.75" position="-0.68 0.3 0.12" color="#ccc" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.14" depth="0.75" position="0 0.3 0.12" color="#ccc" material="" geometry=""></a-box>
+      <a-box width="0.67" height="0.14" depth="0.75" position="0.68 0.3 0.12" color="#ccc" material="" geometry=""></a-box>
+    </a-entity>
+    <a-entity id="coffeetable" position="1.5 0.1635 4.65">
+      <a-cone color="#333" radius-bottom="0.01" radius-top="0.457" height="0.327" material="" geometry=""></a-cone>
+      <a-cone color="#333" radius-bottom="0.25" radius-top="0.01" height="0.327" material="" geometry=""></a-cone>
+    </a-entity>
+    <a-entity id="desk">
+
+    </a-entity>
+    <a-entity id="officechair">
+    
+    </a-entity>
+
+    <!-- Background -->
+    
+    <!-- walls Hrvatska-->
+    <a-box floor="" static-body="" rotation="" width="8" height="3" depth="1" color="#BCC6CD" position="0 1.5 -4" material="src:https://i.imgur.com/1FNN3zv.png" geometry=""></a-box>
+    <a-plane floor="" static-body="" rotation="0 -90 0" width="10" height="3" depth="1" color="#BCC6CD" position="4 1.5 1" material="src:https://i.imgur.com/rQCdzSg.jpg" geometry=""></a-plane>
+    <a-plane floor="" static-body="" rotation="0 90 0" width="8" height="3" depth="1" color="#BCC6CD" position="-4 1.5 -0.036" material="src:https://i.imgur.com/ezBHi4C.jpg" geometry=""></a-plane>
+    <a-plane floor="" static-body="" rotation="0 180 0" width="8" height="3" depth="1" color="#BCC6CD" position="0 1.5 6" material="src:https://i.imgur.com/5FI6FG0.jpg" geometry=""></a-plane>
+	    
+		    <!-- Walls Srbija -->
+
+
+	 <a-plane floor="" static-body="" rotation="0 180 0" width="8" height="3" depth="1" color="#BCC6CD" position="-7.992 1.5 6" material="src:https://i.imgur.com/cQirHBn.jpg" geometry=""></a-plane>
+<a-box floor="" static-body="" rotation="0 90 0" width="8" height="3" depth="1" color="#BCC6CD" position="-4.52191 1.5 -0.08262" material="src:https://i.imgur.com/nOapAYB.png" geometry="" scale="" shape="" body="type: static" wall=""></a-box>
+<a-box floor="" static-body="" rotation="0 90 0" width="8" height="3" depth="1" color="#BCC6CD" position="-4.52191 1.5 -8.10855" material="src:https://i.imgur.com/JuJvLkT.jpg" geometry="" scale="" shape="" body="type: static" wall=""></a-box> 
+
+
+<a-plane floor="" static-body="" rotation="0 90 0" width="20" height="3" depth="1" color="#BCC6CD" position="-11.8935 1.5 -3.88247" material="src:https://i.imgur.com/ypb2mFR.jpg" geometry=""></a-plane>
+<a-plane floor="" static-body="" rotation="" width="8" height="3" depth="1" color="#BCC6CD" position="-7.40001 1.5 -13.88881" material="src:https://i.imgur.com/kYxlkuu.jpg" geometry="width: 10" scale="" shape="" body="type: static" wall=""></a-plane>
+
+  		    <!-- Walls BiH -->
+
+
+<a-plane floor="" static-body="" rotation="" width="8" height="3" depth="1" color="#BCC6CD" position="5.08705 1.5 -13.88881" material="src:https://i.imgur.com/awnXQel.jpg" geometry="width: 15" scale="" shape="" body="type: static" wall=""></a-plane>
+  <a-box floor="" static-body="" rotation="0 90 0" width="8" height="3" depth="1" color="#BCC6CD" position="-3.49316 1.5 -8.10855" material="src:https://i.imgur.com/vORZqPC.jpg" geometry="" scale="" shape="" body="type: static" wall=""></a-box>
+<a-box floor="" static-body="" rotation="" width="8" height="3" depth="1" color="#BCC6CD" position="0 1.5 -4.56431" material="src:https://i.imgur.com/ONQMHcF.jpg" geometry="depth: 0.1" scale="" shape="" body="type: static" wall=""></a-box>
+<a-box floor="" static-body="" rotation="" width="10" height="3" depth="1" color="#BCC6CD" position="7.35427 1.5 -3.96699" material="src:https://i.imgur.com/pskqRHw.jpg" geometry="" scale="0.7 1 1" shape="" body="type: static" wall=""></a-box>
+<a-plane floor="" static-body="" rotation="0 -90 0" width="10" height="3" depth="1" color="#BCC6CD" position="12.82526 1.5 -8.75808" material="src:https://i.imgur.com/HuXfSrf.jpg" geometry="width: 12" scale="" shape="" body="type: static" wall=""></a-plane>
+
+  		    <!-- Walls Crna Gora -->
+<a-box floor="" static-body="" rotation="0 90 0" width="10" height="3" depth="1" color="#BCC6CD" position="4.63991 1.5 0.57212" material="src:https://i.imgur.com/VR0d8lA.jpg" geometry="" =""="" scale="" shape="" body="type: static" wall=""></a-box>
+
+<a-plane floor="" static-body="" rotation="0 -90 0" width="10" height="3" depth="1" color="#BCC6CD" position="12.82526 1.5 3.18549" material="src:https://i.imgur.com/j84E1W0.jpg" geometry="width: 12" scale="" shape="" body="type: static" wall=""></a-plane>
+<a-box floor="" static-body="" rotation="0 180 0" width="8" height="3" depth="1" color="#FFFFFF" position="9.01715 1.5 6" material="src:https://i.imgur.com/rHsjH7k.jpg" geometry="width: 10" scale="" shape="" body="type: static" wall=""></a-box>
+<a-box floor="" static-body="" rotation="" width="10" height="3" depth="1" color="#BCC6CD" position="8.24468 1.5 -3.00625" material="src:https://i.imgur.com/F8UcOw8.jpeg" geometry="width: 9; depth: 0.5" scale="0.7 1 1" shape="" body="type: static" wall=""></a-box>
+ 
+ 
+ <a-plane floor="" static-body="" rotation="0 180 0" width="8" height="3" depth="1" color="#BCC6CD" position="9.01715 1.5 6" material="src: net-zid.jpg" geometry="width: 10"></a-plane> 
+
+  
+  <!-- srpski meni --> 
+  
+  
+  
+        <a-entity id="menu" class="screen menu dark" htmlembed="" position="-11.80885 1.792 2.51868" rotation="0 100 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Srpski mediji</h2>
+        <ul class="">
+          <li class=""><a href="#" class="button">Alo.rs</a></li>
+          <li class=""><a href="#slide2" class="button">Informer</a></li>
+          <li class=""><a href="#slide3" class="button">Danas</a></li>
+          <li class=""><a href="#slide4" class="button">Kurir</a></li>
+        </ul>
+      </a-entity>
+      <a-entity id="main" class="screen dark main" htmlembed="" position="-11.80885 1.79153 1.09814" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" rotation="0 90 0" scale="0.5 0.5 0.5">
+        <div id="page1" class="">
+          <h1>Alo.rs</h1>
+
+          <p class=""> </p> <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.alo.rs%2Frss%2Fvesti%2Fpolitika&amp;limit=5&amp;showtitle=false&amp;type=js"></script> </div><p class="">
+        </p></div>
+        <div id="page2" class="">
+          <h1>Informer</h1>
+          <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Finformer.rs%2Frss%2Fdanasnje-vesti&amp;detail=-1&amp;limit=5&amp;showtitle=false&amp;type=js"></script></div>
+        </div>
+        <div id="page3">
+          <h1>Danas</h1>
+          <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.danas.rs%2Ffeed%2F&amp;limit=5&amp;showtitle=false&amp;type=js"></script></div>
+          
+        </div>
+        <div id="page4">
+          <h1>Kurir</h1>
+			 <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.kurir.rs%2Frss&amp;detail=-1&amp;limit=5&amp;showtitle=false&amp;type=js"></script>
+			</div>
+        </div>
+      </a-entity>
+      <a-entity id="menu" class="screen menu dark" htmlembed="" position="-11.809 1.792 -0.31211" rotation="0 90 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Poveznice</h2>
+        <a class="imgLink" href="https://www.alo.rs/"><img src="assets/alo-logo.jpg" width="80" height="80"><div>Alo</div></a>
+        <a class="imgLink" href="https://www.kurir.rs/"><img src="assets/kurir.jpg" width="80" height="80"><div>Kurir</div></a>
+        <a class="imgLink" href="https://informer.rs/"><img src="assets/informer-logo.jpg" width="80" height="80"><div>Informer</div></a>
+      </a-entity>
+      <a-box material="src: [object HTMLImageElement]" scale="0.5 0.5 0.5" position="0 0.5 -4" id="box" visible="false" geometry=""></a-box>
+    <div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div>
+
+  <!-- Bih meni --> 
+        <a-entity id="menu" class="screen menu dark" htmlembed="" position="4.299 1.82 -4.791" rotation="0 180 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>BiH mediji</h2>
+        <ul class="">
+          <li class=""><a href="#" class="button">Avaz</a></li>
+          <li class=""><a href="#slide2" class="button">N1</a></li>
+          <li class=""><a href="#slide3" class="button">Hayat</a></li>
+          <li class=""><a href="#slide4" class="button">Dnevnik.ba</a></li>
+        </ul>
+      </a-entity>
+      <a-entity id="main" class="screen dark main" htmlembed="" position="2.893 1.795 -4.784" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" rotation="0 180 0" scale="0.5 0.5 0.5">
+        <div id="page1" class="">
+          <h1>Avaz</h1>
+
+         <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Favaz.ba%2Frss&amp;detail=20&amp;limit=4&amp;showtitle=false&amp;type=js"></script>
+
+ 
+          </div>
+        </div>
+        <div id="page2" class="">
+          <h1>N1</h1>
+           <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fba.n1info.com%2Ffeed%2F&amp;detail=20&amp;limit=4&amp;showtitle=false&amp;type=js"></script></div>
+        </div>
+        <div id="page3">
+          <h1>Hayat</h1>
+         <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fhayat.ba%2Ffeed%2F&amp;detail=20&amp;limit=4&amp;showtitle=false&amp;type=js"></script></div>
+          
+        </div>
+        <div id="page4">
+          <h1>Dnevnik.ba</h1>
+			 <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.dnevnik.ba%2Ffeed%2F&amp;detail=10&amp;limit=5&amp;showtitle=false&amp;type=js"></script>
+			</div>
+        </div>
+      </a-entity>
+      <a-entity id="menu" class="screen menu dark" htmlembed="" position="1.504 1.792 -4.791" rotation="0 180 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Poveznice</h2>
+        <a class="imgLink" href="https://avaz.ba/"><img src="assets/avaz-logo.jpg" width="80" height="80"><div>Avaz</div></a>
+        <a class="imgLink" href="https://www.bljesak.info/"><img src="assets/bljesak-logo.jpg" width="80" height="80"><div>Bljesak.info</div></a>
+        <a class="imgLink" href="https://www.klix.ba/"><img src="assets/klix-logo.jpg" width="80" height="80"><div>Klix</div></a>
+      </a-entity>
+      <a-box material="src: [object HTMLImageElement]" scale="0.5 0.5 0.5" position="0 0.5 -4" id="box" visible="false" geometry=""></a-box>
+    <div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div>
+
+ <!-- Crna gora meni --> 
+        <a-entity id="menu" class="screen menu dark" htmlembed="" position="5.337 1.792 2.519" rotation="0 100 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Crna Gora</h2>
+        <ul class="">
+          <li class=""><a href="#" class="button">CDM</a></li>
+          <li class=""><a href="#slide2" class="button">Pobjeda</a></li>
+          <li class=""><a href="#slide3" class="button">Analitika</a></li>
+          <li class=""><a href="#slide4" class="button">Vijesti.me</a></li>
+        </ul>
+      </a-entity>
+      <a-entity id="main" class="screen dark main" htmlembed="" position="5.304 1.792 1.098" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" rotation="0 90 0" scale="0.5 0.5 0.5">
+        <div id="page1" class="">
+          <h1>CDM</h1>
+
+          <div class="code">  <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.cdm.me%2Frss&amp;detail=10&amp;limit=4&amp;showtitle=false&amp;type=js"></script>
+
+ 
+          </div>
+          <p class="">
+        </p></div>
+        <div id="page2" class="">
+          <h1>Pobjeda</h1>
+           <div class="code"> <script src="//rss.bloople.net/?url=https%3A%2F%2Frss.pobjeda.me%2F&amp;detail=10&amp;showtitle=false&amp;type=js"></script></div>
+        </div>
+        <div id="page3">
+          <h1>Analitika</h1>
+          <div class="code">  <script src="//rss.bloople.net/?url=https%3A%2F%2Frss.portalanalitika.me%2F&amp;detail=-1&amp;limit=7&amp;showtitle=false&amp;type=js"></script> </div>
+          
+        </div>
+        <div id="page4">
+          <h1>Vijesti.me</h1>
+			 <div class="code">  <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.vijesti.me%2Frss&amp;detail=-1&amp;limit=7&amp;showtitle=false&amp;type=js"></script>
+			</div>
+        </div>
+      </a-entity>
+      <a-entity id="menu" class="screen menu dark" htmlembed="" position="5.297 1.792 -0.312" rotation="0 90 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Poveznice</h2>
+        <a class="imgLink" href="https://www.vijesti.me/"><img src="assets/vijesti-logo.jpg" width="80" height="80"><div>Vijesti.me</div></a>
+        <a class="imgLink" href="https://www.portalanalitika.me/"><img src="assets/analitika-logo.jpg" width="80" height="80"><div>Analitika</div></a>
+        <a class="imgLink" href="https://www.pobjeda.me/"><img src="assets/pobjeda1.jpg" width="80" height="80"><div>Pobjeda</div></a>
+      </a-entity>
+      <a-box material="src: [object HTMLImageElement]" scale="0.5 0.5 0.5" position="0 0.5 -4" id="box" visible="false" geometry=""></a-box>
+    <div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div>
+
+
+
+  
+  <!-- Sky --> 
+
+	  
+
+	  
+     
+	 <a-entity id="menu" class="screen menu dark" htmlembed="" position="-3.809 1.792 2.51868" rotation="0 100 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Hrvatski mediji</h2>
+        <ul class="">
+          <li class=""><a href="#" class="button">Večernji list</a></li>
+          <li class=""><a href="#slide2" class="button">Index.hr</a></li>
+          <li class=""><a href="#slide3" class="button">Net.hr</a></li>
+          <li class=""><a href="#slide4" class="button">Telegram.hr</a></li>
+        </ul>
+      </a-entity>
+      <a-entity id="main" class="screen dark main" htmlembed="" position="-3.80885 1.79153 1.09814" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" rotation="0 90 0" scale="0.5 0.5 0.5">
+        <div id="page1" class="">
+          <h1>Večernji list</h1>
+
+            <div class="code"> 	<script src="//rss.bloople.net/?url=http%3A%2F%2Fwww.vecernji.hr%2Frss%2F&amp;showtitle=false&amp;type=js"></script>  </div>
+ 
+          <p class="">
+        </p></div>
+        <div id="page2" class="">
+          <h1>Index.hr</h1>
+           <div class="code">  <script src="//rss.bloople.net/?url=https%3A%2F%2Fwww.index.hr%2Frss&amp;limit=5&amp;showtitle=false&amp;type=js"></script>
+          </div>
+        </div>
+        <div id="page3">
+          <h1>Net.hr</h1>
+          <div class="code"><script src="//rss.bloople.net/?url=https%3A%2F%2Fnet.hr%2Ffeed%2Fhot&amp;limit=5&amp;showtitle=false&amp;type=js"></script></div>
+          
+        </div>
+        <div id="page4">
+          <h1>Telegram.hr</h1>
+		 <div class="code"> <script src="//rss.bloople.net/?url=http%3A%2F%2Fwww.telegram.hr%2Ffeed&amp;limit=5&amp;showtitle=false&amp;type=js"></script>
+		</div>
+        </div>
+      </a-entity>
+      <a-entity id="menu" class="screen menu dark" htmlembed="" position="-3.809 1.792 -0.31211" rotation="0 90 0" style="display: none; position: absolute; top: 0px; left: 0px; overflow: hidden;" scale="0.5 0.5 0.5">
+        <h2>Poveznice</h2>
+        <a class="imgLink" href="https://aframe.io/"><img src="assets/vecernji.png" width="80" height="80"><div>Večernji list</div></a>
+        <a class="imgLink" href="https://www.vecernji.hr/"><img src="assets/index.png" width="80" height="80"><div>Index.hr</div></a>
+        <a class="imgLink" href="https://net.hr/"><img src="assets/nethr.jpg" width="80" height="80"><div>Net.hr</div></a>
+      </a-entity>
+      <a-box material="src: [object HTMLImageElement]" scale="0.5 0.5 0.5" position="0 0.5 -4" id="box" visible="false" geometry=""></a-box>
+    <div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div><div class="a-loader-title" style="display: none;"></div>
+
+      <a-entity id="cameraRig">
+        <a-camera id="camera" camera="" look-controls wasd-controls position="-0.7904461572213315 1.6 0.41632906058232777" rotation="-19.251381916395662 -42.16969372162859 0"  data-aframe-inspector-original-camera="">
+        </a-camera>
+        <a-entity id="mouseCursor"  cursor="rayOrigin: mouse" raycaster="objects: .screen; direction: 0.7870008745600392 -0.32071839776338024 -0.5270382650034282; origin: -1.1093895901790296 3.011514287333138 1.6391168137180085; useWorldCoordinates: true"></a-entity>
+        <a-entity laser-controls="" raycaster="objects: .screen" daydream-controls="hand: right" gearvr-controls="hand: right" oculus-go-controls="hand: right" oculus-touch-controls="hand: right" vive-controls="hand: right" vive-focus-controls="hand: right" windows-motion-controls="" magicleap-controls="hand: right" valve-index-controls="hand: right" generic-tracked-controller-controls="hand: right"></a-entity>
+      </a-entity>
+
+
+
+
+
+
+    </a-scene>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
